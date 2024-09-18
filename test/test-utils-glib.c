@@ -681,7 +681,14 @@ set_timeout (guint factor)
   /* Prevent tests from hanging forever. This is intended to be long enough
    * that any reasonable regression test on any reasonable hardware would
    * have finished. */
+#ifdef __riscv
+  /* Debian currently emulates riscv64 with qemu-system-riscv64. The real
+   * hardware is currently comparable to arm/mips buildds, but qemu is a
+   * lot slower. */
+#define TIMEOUT 1200   /* 20 minutes */
+#else
 #define TIMEOUT 60
+#endif
 
   if (timeout != 0)
     g_source_remove (timeout);
